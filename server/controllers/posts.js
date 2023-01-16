@@ -10,10 +10,10 @@ export const createPost=async(req,res)=>{
         const newPost=new Post({
             userId,
             firstName:user.firstName,
-            lastName:user.lasttName,
+            lastName:user.lastName,
             location:user.location,
             description,
-            userPicturePath:user.userPicturePath,
+            userPicturePath:user.picturePath,
             picturePath,
             likes:{},
             comments:[]
