@@ -73,6 +73,9 @@ const Form = () => {
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(values),
     });
+    if(!loggedInResponse.ok){
+      window.alert("Invalid Email or Password")
+    }
     const loggedIn = await loggedInResponse.json();
     onSubmitProps.resetForm();
     if (loggedIn) {

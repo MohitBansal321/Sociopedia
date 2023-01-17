@@ -51,7 +51,7 @@ export const authSlice = createSlice({
     // updates a specific post in the posts array by finding the post with the id passed in the action payload and replacing it with the post object also passed in the action payload.
     setPost: (state, action) => {
       const updatedPosts = state.posts.map((post) => {
-        if (post._id === action.payload.post_id) return action.payload.post;
+        if (post._id === action.payload.post._id) return action.payload.post;
         return post;
       });
       state.posts = updatedPosts;
