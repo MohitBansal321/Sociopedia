@@ -54,6 +54,19 @@ app.use("/posts",postRoutes);
 
 /* MONGOOSE SETUP */
 const PORT=process.env.PORT || 6001;
+
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+  application.use(express.static(path.join(__dirname1, "../client/build")));
+
+  application.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname1, "../client", "build", "index.html"))
+  );
+} else {
+  application.get("/", (req, res) => {
+    res.send("API is running..");
+  });
+}
 mongoose.set('strictQuery',true);
 mongoose.connect(process.env.MONGO_URL,{
     useNewURLParser:true,
@@ -61,8 +74,5 @@ mongoose.connect(process.env.MONGO_URL,{
 })
 .then(()=>{
     app.listen(PORT,()=>console.log(`Server Running at ${PORT}`))
-
-    // User.insertMany(users);
-    // Post.insertMany(posts);
 })
 .catch((error)=>console.log(`${error} did not connect`))
