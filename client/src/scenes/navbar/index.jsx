@@ -26,25 +26,39 @@ import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 
 const Navbar = () => {
+  // State hook to toggle mobile menu
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+
+  // Dispatch hook for Redux actions
   const dispatch = useDispatch();
+
+  // Navigate hook for React Router navigation
   const navigate = useNavigate();
+
+  // Selector hook for getting user data from Redux store
   const user = useSelector((state) => state.user);
+
+  // Hook to check if screen size is greater than or equal to 1000px
   const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
+  // Hook to get the theme object from Material UI
   const theme = useTheme();
+
+  // Variables to store color values from the theme
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
+  // Variables to store color values from the theme
+  const fullName = user != null ? `${user.firstName} ${user.lastName}` : "Mohit Bansal";
 
-  const fullName = user!=null?`${user.firstName} ${user.lastName}`:"Mohit Bansal";
   return (
     // this is only do when you have box component it available to box component so you send css property as attriubte
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
+        {/* Logo */}
         <Typography
           fontWeight="bold"
           fontSize="clamp(1rem,2rem,2.25rem)"
@@ -59,6 +73,8 @@ const Navbar = () => {
         >
           Sociopedia
         </Typography>
+
+        {/* Search bar for non-mobile screens */}
         {isNonMobileScreens && (
           <FlexBetween
             backgroundColor={neutralLight}
@@ -76,6 +92,7 @@ const Navbar = () => {
       {/* Desktop Nav */}
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
+          {/* Dark/Light mode toggle */}
           <IconButton onClick={() => dispatch(setMode())}>
             {theme.palette.mode === "dark" ? (
               <DarkMode sx={{ fontSize: "25px" }} />
@@ -83,9 +100,17 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
+
+          {/* Message icon */}
           <Message sx={{ fontSize: "25px" }} />
+
+          {/* Notification icon */}
           <Notifications sx={{ fontSize: "25px" }} />
+
+          {/* Help icon */}
           <Help sx={{ fontSize: "25px" }} />
+
+          {/* A FormControl component with a Select component for the user's full name */}
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -104,6 +129,7 @@ const Navbar = () => {
               }}
               input={<InputBase />}
             >
+              {/* Show Two option wehn click fullname and log out */}
               <MenuItem value={fullName}>
                 <Typography>{fullName}</Typography>
               </MenuItem>
@@ -116,6 +142,7 @@ const Navbar = () => {
           <Menu />
         </IconButton>
       )}
+
       {/* Mobile Nav */}
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
@@ -134,6 +161,7 @@ const Navbar = () => {
               <Close />
             </IconButton>
           </Box>
+
           {/* MENU ITEMS */}
           <FlexBetween
             display="flex"
@@ -142,6 +170,7 @@ const Navbar = () => {
             alignItems="center"
             gap="3rem"
           >
+            {/* Show Light/Dark Mode */}
             <IconButton onClick={() => dispatch(setMode())} sx={{ fontSize: "25px" }}>
               {theme.palette.mode === "dark" ? (
                 <DarkMode sx={{ fontSize: "25px" }} />
@@ -149,9 +178,17 @@ const Navbar = () => {
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
+
+            {/* Show Message Icon */}
             <Message sx={{ fontSize: "25px" }} />
+
+            {/* Show Notifications Icon */}
             <Notifications sx={{ fontSize: "25px" }} />
+
+            {/* Show Help Icon */}
             <Help sx={{ fontSize: "25px" }} />
+
+            {/* A FormControl component with a Select component for the user's full name */}
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
@@ -170,6 +207,7 @@ const Navbar = () => {
                 }}
                 input={<InputBase />}
               >
+                {/* Show Two option wehn click fullname and log out */}
                 <MenuItem value={fullName}>
                   <Typography>{fullName}</Typography>
                 </MenuItem>

@@ -26,6 +26,7 @@ const loginSchema = yup.object().shape({
   password: yup.string().required("required"),
 });
 
+// initialize values of Register Page
 const initialValuesRegister = {
   firstName: "",
   lastName: "",
@@ -36,49 +37,76 @@ const initialValuesRegister = {
   picture: "",
 };
 
+// initalize values of Login Page
 const initialValuesLogin = {
   email: "",
   password: "",
 };
 
 const Form = () => {
+  // useState hook to manage the state of the page type
   const [pageType, setPageType] = useState("login");
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // check if the screen size is larger than 600px using the useMediaQuery hook
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
+  // function to handle the user registration
   const register = async (values, onSubmitProps) => {
-    // this allow send form info with image
+    // create a new FormData object to send form information with an image
     const formData = new FormData();
+
+    // append the values from the form to the form data object
     for (let value in values) {
       formData.append(value, values[value]);
     }
+
+    // append the image information to the form data object
     formData.append("picturePath", values.picture.name);
+
+    // make a POST request to the register endpoint
     const savedUserResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/auth/register`, {
       method: "POST",
       body: formData,
     });
+
+    // parse the response from the server as JSON
     const savedUser = await savedUserResponse.json();
+
+    // reset the form after submitting
     onSubmitProps.resetForm();
+
+    // if the user was successfully registered, set the page type to "login"
     if (savedUser) {
       setPageType("login");
     }
   };
+
+  // function to handle the user login
   const login = async (values, onSubmitProps) => {
+    // make a POST request to the login endpoint with the form values
     const loggedInResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify(values),
     });
-    
-    if(!loggedInResponse.ok){
-      window.alert("Invalid Email or Password")
+
+    // check if the login was successful
+    if (!loggedInResponse.ok) {
+      window.alert("Invalid Email or Password");
     }
+
+    // parse the response from the server as JSON
     const loggedIn = await loggedInResponse.json();
+
+    // reset the form after submitting
     onSubmitProps.resetForm();
+
+    // if the user was successfully logged in, update the global state and navigate to the home page
     if (loggedIn) {
       dispatch(
         setLogin({
@@ -90,14 +118,18 @@ const Form = () => {
     }
   };
 
+  // function to handle the form submit
   const handleFormSubmit = async (values, onSubmitProps) => {
     if (isLogin) await login(values, onSubmitProps);
     if (isRegister) await register(values, onSubmitProps);
   };
+
   return (
     <Formik
       onSubmit={handleFormSubmit}
+      // Set initial values based on whether the user is logging in or registering
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
+      // Set the validation schema based on whether the user is logging in or registering
       validationSchema={isLogin ? loginSchema : registerSchema}
     >
       {({
@@ -115,11 +147,13 @@ const Form = () => {
             display="grid"
             gap="30px"
             gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+            // Change the grid column to span 4 if the device is non-mobile
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
             {isRegister && (
+              // Show the following fields only if the user is registering
               <>
                 <TextField
                   label="First Name"
@@ -127,8 +161,10 @@ const Form = () => {
                   onChange={handleChange}
                   value={values.firstName}
                   name="firstName"
+                  // Show error message if there's a touched and error with the field
                   error={Boolean(touched.firstName) && Boolean(errors.firstName)}
                   helperText={touched.firstName && errors.firstName}
+                  // Show field in two grid columns
                   sx={{ gridColumn: "span 2" }}
                 />
                 <TextField
@@ -179,10 +215,13 @@ const Form = () => {
                         p="1rem"
                         sx={{ "&:hover": { cursor: "pointer" } }}
                       >
+                        {/* Input for selecting files */}
                         <input {...getInputProps()} />
                         {!values.picture ? (
+                          //  Display text if no picture is selected
                           <p>Add Picture Here</p>
                         ) : (
+                          //  Display the selected picture name and edit icon
                           <FlexBetween>
                             <Typography>{values.picture.name}</Typography>
                             <EditOutlinedIcon />
@@ -194,6 +233,8 @@ const Form = () => {
                 </Box>
               </>
             )}
+
+            {/* Email Input */}
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -204,6 +245,8 @@ const Form = () => {
               helperText={touched.email && errors.email}
               sx={{ gridColumn: "span 4" }}
             />
+
+            {/* Password Input */}
             <TextField
               label="Password"
               type="password"
@@ -216,8 +259,10 @@ const Form = () => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
+
           {/* Buttons */}
           <Box>
+            {/* Show Button of Login or Register */}
             <Button
               fullWidth
               type="submit"
@@ -231,6 +276,7 @@ const Form = () => {
             >
               {isLogin ? "Login" : "Register"}
             </Button>
+            {/* Display Text to nagivate to register or login page */}
             <Typography
               onClick={() => {
                 setPageType(isLogin ? "register" : "login");

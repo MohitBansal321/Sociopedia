@@ -35,26 +35,36 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   const patchLike = async () => {
+    // Send a PATCH request to the API endpoint
     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/posts/${postId}/like`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       body: JSON.stringify({ userId: loggedInUserId }),
     });
+
+    // Get the updated post object from the response
     const updatePost = await response.json();
+
+    // Get the updated post object from the response
     dispatch(setPost({ post: updatePost }));
   };
 
   return (
     <WidgetWrapper m="2rem 0">
+      {/* Render the Friend component with information about the post author */}
       <Friend
         friendId={postUserId}
         name={name}
         subtitle={location}
         userPicturePath={userPicturePath}
       />
+
+      {/* Display the description of the post */}
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
+
+      {/* If there's a picture associated with the post, display it */}
       {picturePath && (
         <img
           width="100%"
@@ -64,10 +74,10 @@ const PostWidget = ({
           src={`${process.env.REACT_APP_BASE_URL}/assets/${picturePath}`}
         />
       )}
+
+      {/* If there's a picture associated with the post, display it */}
       <FlexBetween mt="0.25rem">
-
         <FlexBetween gap="1rem">
-
           <FlexBetween gap="0.3rem">
             <IconButton onClick={patchLike}>
               {isLiked ? <FavoriteOutlined sx={{ color: primary }} /> : <FavoriteBorderOutlined />}
@@ -81,25 +91,23 @@ const PostWidget = ({
             </IconButton>
             <Typography>{comments.length}</Typography>
           </FlexBetween>
-
         </FlexBetween>
+        {/* Render the share button */}
         <IconButton>
-            <ShareOutlined/>
+          <ShareOutlined />
         </IconButton>
       </FlexBetween>
+
+      {/* If comments are displayed, render each comment along with a divider */}
       {isComments && (
-        <Box
-         mt="0.5rem"
-        >
-            {comments.map((comment,i)=>(
-                <Box
-                 key={`${name}-${i}`}
-                >
-                    <Divider/>
-                    <Typography sx={{color:main,m:"0.5rem 0",pl:"1rem"}}>{comment}</Typography>
-                </Box>
-            ))}
-            <Divider/>
+        <Box mt="0.5rem">
+          {comments.map((comment, i) => (
+            <Box key={`${name}-${i}`}>
+              <Divider />
+              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>{comment}</Typography>
+            </Box>
+          ))}
+          <Divider />
         </Box>
       )}
     </WidgetWrapper>
