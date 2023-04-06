@@ -1,3 +1,4 @@
+![socio](https://user-images.githubusercontent.com/78220157/230327603-d7126dd2-5dac-42bb-98cc-9a5533010358.png)
 
 # SOCIOPEDIA
 
